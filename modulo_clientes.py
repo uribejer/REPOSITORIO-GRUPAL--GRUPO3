@@ -33,8 +33,8 @@ def modificar_nombre (tabla_clientes_actualizada):
         for dato in cliente:
             if dato == cliente[1]:
                 nombre_completo = cliente[1]   
-                nombre_completo.strip() #elimina espacio sobrantes al principio y al final del texto
-                nombre, apellido = nombre_completo.split(' ', 1) #divide el nombre y apellido por el primer espacio
+                nombre_completo.strip() #ELIMINA LOS ESCPACIOS SORANTES AL PRINCIPIO Y AL FINAL
+                nombre, apellido = nombre_completo.split(' ', 1) #DIVIDE EL NOMBRE Y APELLIDO POR EL PRIMER ESPACIO
                 nombre_modificado = (f"{nombre[0].upper()}.{apellido.upper()}")
                 cliente[1] = nombre_modificado
     return tabla_clientes_actualizada

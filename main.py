@@ -40,23 +40,19 @@ tabla_ordenada_libros = sorted(tabla_libros_actualizada, key=lambda libro: (libr
 impresion_tabla_ordenada_libros = ordenada_libros(tabla_ordenada_libros)
 
 #LLAMDO A FUNCIONES PRESTAMOS
-prestamos_data = acciones_de_prestamos(prestamos, tabla_ordenada_libros, tabla_ordenada_clientes)
+#ARMAMOS LA MATRIZ
+armado_matriz_prestamos = acciones_de_prestamos(prestamos, tabla_ordenada_libros, tabla_ordenada_clientes)
+#SEPARACION
 print("-" * 40) 
-imprimir_prestamos(prestamos)
+#IMPRIMIMOS LOS DATOS DEL CLIENTE Y LOS LIBROS SELECCIONADOS
+impresion_prestamos = imprimir_prestamos(prestamos)
+#FILTRAMOS POR METODO DE PAGO
 clientes_efectivo, clientes_tarjeta = filtrar_prestamos_por_metodo_pago(prestamos)
-print("Clientes que pagan en efectivo:")
-for cliente in clientes_efectivo:
-    print(cliente)
-
-print("\nClientes que pagan con tarjeta:")
-for cliente in clientes_tarjeta:
-    print(cliente)
-
-print()
-
+#IMPRIMIMOS POR METODO DE PAGO
+impresion_por_metodo_de_pago(clientes_efectivo, clientes_tarjeta)
+#SEPARACION
+print("-" * 40)
 #USAMOS UNA LISTA POR COMPRENSION CON UNA FUNCION LAMBDA INCLUIDA PARA CALCULAR EL TOTAL
 totales_por_cliente = [(cliente[1], sum(map(lambda libro: libro[2], cliente[3]))) for cliente in prestamos]
-
 #SE IMPRIMEN EL RESULTADO
-for cliente, total in totales_por_cliente:
-    print(f"Cliente: {cliente} - Total de libros: ${total}")
+total_a_pagar_por_cliente = impresion_total(totales_por_cliente) 

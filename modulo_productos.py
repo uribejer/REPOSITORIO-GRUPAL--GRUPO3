@@ -34,8 +34,8 @@ def modificar_autor (tabla_libros_actualizada):
         for dato in libro:
             if dato == libro[1]:
                 nombre_completo = libro[2]   
-                nombre_completo.strip() 
-                nombre, apellido = nombre_completo.split(' ', 1) 
+                nombre_completo.strip() #ELIMINA LOS ESCPACIOS SORANTES AL PRINCIPIO Y AL FINAL
+                nombre, apellido = nombre_completo.split(' ', 1) #DIVIDE EL NOMBRE Y APELLIDO POR EL PRIMER ESPACIO
                 nombre_modificado = (f"{nombre[0].upper()}.{apellido.upper()}")
                 libro[2] = nombre_modificado
     return tabla_libros_actualizada
@@ -68,5 +68,3 @@ def ordenada_libros(tabla_ordenada_libros):
         print(f"{libro[0]:^10} {libro[1]:^30}  {libro[2]:^30} {libro[3]:^30} {libro[4]:^10}")
 
     return tabla_ordenada_libros
-
-

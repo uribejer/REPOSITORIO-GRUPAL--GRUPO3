@@ -56,13 +56,18 @@ def filtrar_prestamos_por_metodo_pago(prestamos):
     #RETORNAMOS LAS DOS LISTAS ACA
     return clientes_efectivo, clientes_tarjeta
 
+def impresion_por_metodo_de_pago(clientes_efectivo, clientes_tarjeta):
+    print("Clientes que pagan en efectivo:")
+    for cliente in clientes_efectivo:
+        print(f"El cliente {cliente[1]} paga en efectivo")
+
+    print("-" * 40)
+
+    print("\nClientes que pagan con tarjeta:")
+    for cliente in clientes_tarjeta:
+        print(f"El cliente {cliente[1]} paga con tarjeta")
 
 
-
-
-
-
-
-
-
-
+def impresion_total(totales_por_cliente):
+    for cliente, total in totales_por_cliente:
+        print(f"Cliente: {cliente} - Total de libros: ${total}")
