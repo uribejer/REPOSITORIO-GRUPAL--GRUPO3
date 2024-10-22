@@ -1,58 +1,30 @@
-from modulo_clientes import *
-from modulo_productos import *
-from modulo_prestamos import *
+from menu import menu_general
 
-#TABLA CLIENTES
-clientes = [
-    [2, 'Thiago Valenzuela', 'efectivo'],
-    [4, 'Luciano Lamas', 'tarjeta'],
-    [5, 'Uriel Bejer', 'efectivo'], 
-    [10, 'Valentino Garmendia','tarjeta'] 
-]
+# ID(libro)    TITULO      AUTOR       PRECIO          CANTIDAD DISPONIBLE
 
-#TABLA PRODUCTOS
 libros = [
-    [2, "Cien años de soledad", "Gabriel García Márquez", "Sudamericana", 100.5],
-    [7, "Fervor de Buenos Aires", "Jorge Luis Borges", "Emecé", 80],
-    [3, "La casa de los conejos", "Laura Alcoba", "Edhasa", 20], 
-    [5, "El secreto de sus ojos", "Eduardo Sacheri", "Alfaguara", 95.80] 
+    [2405, "Cien años de soledad", "Gabriel García Márquez", 100, 3],
+    [7230, "Fervor de Buenos Aires", "Jorge Luis Borges", 80, 2],
+    [3789, "La casa de los conejos", "Laura Alcoba", 20, 5], 
+    [5501, "El secreto de sus ojos", "Eduardo Sacheri", 95, 10]
 ]
+# ID(usuario)    NOMBRE      MAIL       NRO TELEFONO          METODO DE PAGO  
 
-#TABLA PRESTAMOS
-prestamos = []
+usuarios = { 
+    "2010": {"nombre" : "T.VALENZUELA", "email" : "valenzuela@uade.edu,ar", "telefono" : "11-31971520", "metodo de pago" : "efectivo"},
+    "4830": {"nombre" : "L.LAMAS", "email" : "lamas@uade.edu.ar","telefono" : "11-36241255","metodo de pago" : "tarjeta"},
+    "5990": {"nombre" : "U.BEJER", "email" : "bejer@uade.edu.ar","telefono" : "11-42152979","metodo de pago" :"efectivo"}, 
+    "1030": {"nombre" : "V.GARMENDIA", "email" :"garmendia@uade.edu.ar","telefono" : "11-35792659","metodo de pago" : "tarjeta"} 
+    }
+    
+# ID(usuario)   LIRBOS A LLEVAR     PRECIO TOTAL    FECHA DE COMPRA
+registros = {
+    "2010": {"libros a llevar" : ["Cien años de soledad"], "precio total" : "100", "fecha de compra" : "10-5-2024"}
+}
 
-#LLAMADO A FUNNCIONES CLIENTES
-impresion_tabla_desordenada_clientes = desordenada_clientes(clientes)
-cant_clientes_agregar = int(input("Cuantos clientes se agregaran? "))
-tabla_clientes_actualizada = agregar_clientes (clientes, cant_clientes_agregar)
-tabla_clientes_actualizada = modificar_nombre (tabla_clientes_actualizada)
-tabla_clientes_actualizada = eliminar_cliente(tabla_clientes_actualizada)
-tabla_ordenada_clientes = sorted(tabla_clientes_actualizada, key=lambda cliente: (cliente[0]))
-impresion_tabla_ordenada_clientes = ordenada_clientes(tabla_ordenada_clientes)
+conjunto_ids_usuarios = {"2010", "4830", "5990", "1030"}
+conjunto_ids_libros = {2405, 7230, 3789, 5501}
+conjunto_ids_registros = {"2010"}
 
-#LLAMADO A FUNNCIONES PRODUCTOS
-impresion_tabla_desordenada_libros = desordenada_libros(libros)
-cant_libros_agregar = int(input("Cuantos libros se agregaran? "))
-tabla_libros_actualizada = agregar_libros (libros, cant_libros_agregar)
-tabla_libros_actualizada = modificar_autor (tabla_libros_actualizada)
-tabla_libros_actualizada = eliminar_libro(tabla_libros_actualizada)
-tabla_ordenada_libros = sorted(tabla_libros_actualizada, key=lambda libro: (libro[0], -libro[4]))
-impresion_tabla_ordenada_libros = ordenada_libros(tabla_ordenada_libros)
-
-#LLAMDO A FUNCIONES PRESTAMOS
-#ARMAMOS LA MATRIZ
-armado_matriz_prestamos = acciones_de_prestamos(prestamos, tabla_ordenada_libros, tabla_ordenada_clientes)
-#SEPARACION
-print("-" * 40) 
-#IMPRIMIMOS LOS DATOS DEL CLIENTE Y LOS LIBROS SELECCIONADOS
-impresion_prestamos = imprimir_prestamos(prestamos)
-#FILTRAMOS POR METODO DE PAGO
-clientes_efectivo, clientes_tarjeta = filtrar_prestamos_por_metodo_pago(prestamos)
-#IMPRIMIMOS POR METODO DE PAGO
-impresion_por_metodo_de_pago(clientes_efectivo, clientes_tarjeta)
-#SEPARACION
-print("-" * 40)
-#USAMOS UNA LISTA POR COMPRENSION CON UNA FUNCION LAMBDA INCLUIDA PARA CALCULAR EL TOTAL
-totales_por_cliente = [(cliente[1], sum(map(lambda libro: libro[2], cliente[3]))) for cliente in prestamos]
-#SE IMPRIMEN EL RESULTADO
-total_a_pagar_por_cliente = impresion_total(totales_por_cliente) 
+# Ejecutar el sistema
+menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_ids_libros, conjunto_ids_registros)
