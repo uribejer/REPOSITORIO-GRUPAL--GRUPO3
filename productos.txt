@@ -1,0 +1,7 @@
+9123; Botines Adidas Predator;2200000;7
+1045; Campera Columbia Impermeable;270000;4
+2158; Buzo Nike Sportswear;650000;14
+3267; Shorts Under Armour;300000;13
+4390; Bolso Puma Training;500000;11
+5476; Sudadera Champion;750000;10
+6584; Sombrero Kangol;200000;18

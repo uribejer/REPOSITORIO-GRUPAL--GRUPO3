@@ -3,10 +3,10 @@ from crud_usuarios import *
 from crd_registros_compra import *
 
 
-def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_ids_libros, conjunto_ids_registros):
+def menu_general(usuarios, productos, registros, conjunto_ids_usuarios, conjunto_ids_productos, conjunto_ids_registros):
     while True:
         try:
-            opcion = int(input("1) Gestion de Uusarios 2) Gestion de Productos 3) Gestion de Registros de compra 4) Salir: "))
+            opcion = int(input("1) Gestion de Usarios 2) Gestion de Productos 3) Gestion de Registros de compra 4) Salir: "))
             if opcion == 1:
                 while True:
                     mostrar_menu_usuarios()
@@ -14,7 +14,7 @@ def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_id
                         seleccion = (input("Seleccione una opción: "))
                         
                         if (not(seleccion.isdigit())):
-                            raise ValueError
+                            raise ValueError("El valor ingreasado debe ser un numero.")
                         
                         seleccion = int(seleccion)
 
@@ -31,8 +31,8 @@ def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_id
                             break
                         else:
                             print("Opción inválida, por favor intente nuevamente.")
-                    except ValueError:
-                        print("Error: 1")
+                    except ValueError as msj_error:
+                        print(f"Error valor ingresado no numerico {msj_error}. Ingrese un numero porfavor.")
             elif opcion == 2:
                 while True:
                     mostrar_menu_productos()
@@ -40,25 +40,27 @@ def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_id
                         seleccion = (input("Seleccione una opción: "))
 
                         if (not(seleccion.isdigit())):
-                            raise ValueError
+                            raise ValueError("El valor ingreasado debe ser un numero.")
                         
                         seleccion = int(seleccion)
 
                         if seleccion == 1:
-                            agregar_producto(libros, conjunto_ids_libros)
+                            agregar_producto(productos, conjunto_ids_productos)
                         elif seleccion == 2:
-                            leer_productos(libros)
+                            leer_productos(productos)
                         elif seleccion == 3:
-                            actualizar_ejemplares(libros, conjunto_ids_libros)
+                            actualizar_ejemplares(productos, conjunto_ids_productos)
                         elif seleccion == 4:
-                            eliminar_producto(libros, conjunto_ids_libros)
+                            eliminar_producto(productos, conjunto_ids_productos)
                         elif seleccion == 5:
+                            guardar_productos_en_archivo(productos)
+                        elif seleccion == 6:
                             print("Saliendo del sistema...")
                             break
                         else:
                             print("Opción inválida, por favor intente nuevamente. ")
-                    except ValueError:
-                        print("Error: 2")
+                    except ValueError as msj_error:
+                        print(f"Error valor ingresado no numerico {msj_error}. Ingrese un numero porfavor.")
             elif opcion == 3:
                  while True:
                     mostrar_menu_registros_compra()
@@ -66,12 +68,13 @@ def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_id
                         seleccion = (input("Seleccione una opción: "))
 
                         if (not(seleccion.isdigit())):
-                            raise ValueError
+                            #forzamos al error 
+                            raise ValueError("El valor ingreasado debe ser un numero.")
                         
                         seleccion = int(seleccion)
 
                         if seleccion == 1:
-                            agregar_registros(libros, registros, conjunto_ids_registros)
+                            agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids_usuarios)
                         elif seleccion == 2:
                             leer_registros(registros)
                         elif seleccion == 3:
@@ -81,12 +84,12 @@ def menu_general(usuarios, libros, registros, conjunto_ids_usuarios, conjunto_id
                             break
                         else:
                             print("Opción inválida, por favor intente nuevamente.")
-                    except ValueError:
-                        print("Error: 1")            
+                    except ValueError as msj_error:
+                        print(f"Error valor ingresado no numerico {msj_error}. Ingrese un numero porfavor.")            
             elif opcion == 4:
                 print("Saliendo del sistema...")
                 break
             else: 
-                print("Opción inválida. Intente nuevamente. ")
+                print("Opción inválida, por favor intente nuevamente.")
         except ValueError:
-            print("Error: Ingrese un numero porfavor.")
+            print("Error: Valor ingresado no numerico. Ingrese un numero porfavor.")
