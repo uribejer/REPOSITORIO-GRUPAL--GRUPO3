@@ -1,0 +1,26 @@
+{
+    "2010": {
+        "nombre": "T.VALENZUELA",
+        "email": "valenzuela@uade.edu.ar",
+        "telefono": "11-31971520",
+        "metodo de pago": "efectivo"
+    },
+    "4830": {
+        "nombre": "L.LAMAS",
+        "email": "lamas@uade.edu.ar",
+        "telefono": "11-36241255",
+        "metodo de pago": "tarjeta"
+    },
+    "5990": {
+        "nombre": "U.BEJER",
+        "email": "bejer@uade.edu.ar",
+        "telefono": "11-42152979",
+        "metodo de pago": "efectivo"
+    },
+    "1030": {
+        "nombre": "V.GARMENDIA",
+        "email": "garmendia@uade.edu.ar",
+        "telefono": "11-35792659",
+        "metodo de pago": "tarjeta"
+    }
+}

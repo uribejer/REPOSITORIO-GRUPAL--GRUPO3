@@ -10,18 +10,6 @@ def mostrar_menu_productos():
     print("5. Guardar productos en archivo")
     print("6. Salir")
 
-def guardar_productos_en_archivo(productos):
-    """
-    Guarda los productos de la matriz en un archivo de texto.
-    Cada producto se guarda en una línea con el formato:
-    id_producto;nombre_producto;precio_producto;stock_producto
-    """
-    with open("productos.txt", "w") as archivo:
-        for producto in productos:
-            archivo.write(f"{producto[0]};{producto[1]};{producto[2]};{producto[3]}\n")
-    print("Productos guardados en archivo.")
-
-
 def agregar_producto(productos, conjunto_ids_productos):
     '''
     pre: recibe una matriz ya creada
@@ -31,11 +19,17 @@ def agregar_producto(productos, conjunto_ids_productos):
     try:
         id_producto = int(input("Ingrese el ID del producto a agregar: "))
         while (id_producto in conjunto_ids_productos) or (not validar_id_producto(id_producto)):
-            if (id_producto in conjunto_ids_productos):
-                id_producto = input("El ID ingresado ya exsiste. Ingrese un id nuevamente (4 digitos): ")
+            if id_producto in conjunto_ids_productos:
+                print("El ID ingresado ya existe.")
             else:
-                id_producto = input("El ID ingresado no cumple con lo solicitado. Ingrese un id nuevamente (4 digitos): ")
-                
+                print("El ID ingresado no cumple con lo solicitado.")
+            # Asegúrate de convertir a entero después de recibir el input nuevamente
+            try:
+                id_producto = int(input("Ingrese un ID válido (4 dígitos): "))
+            except ValueError:
+                print("Debe ingresar un número entero.")
+                continue
+            
         producto = input("Ingrese el nombre del producto: ")
         while (not validar_producto(producto)):
             producto = input("El producto ingresado no es valido. Ingrese el producto nuevamente: ")
@@ -73,17 +67,26 @@ def agregar_producto(productos, conjunto_ids_productos):
     except Exception as error_inesperado:
         print(f'Error inesperado: {error_inesperado}.')
 
-def leer_productos(productos):
+def leer_productos_archivos(archivo, modo):
     '''
-    pre: recibe una matriz ya creada
-    pos: muestra los productos de la matriz
+    pre: recibe archivo de texto ya creado
+    pos: muestra los productos cargados en el archivo
 
     '''
-    print(f"{'ID':^10} {'PRODUCTO':^25} {'PRECIO':^10} {'STOCK':^10}")
-    print("-" * 100)
-    for producto in productos:
-        print(f"{producto[0]:^10} {producto[1]:^25} {producto[2]:^10} {producto[3]:^10} ")
-
+    try:
+        arch = open(archivo, modo, encoding="UTF-8")
+    except OSError:
+        print("No es posbile leer el archivo")
+    else:
+        registro = arch.readline().strip()
+        print(f"{'ID':9} {'PRODUCTO':25} {'PRECIO':13} {'STOCK':4}")
+        print("-" * 100)
+        while registro:
+            id, producto, precio, stock = registro.split(";")
+            print(f'{id:10}{producto:25}${precio:15}{stock:4}')
+            registro = arch.readline().strip()
+    finally:
+        arch.close()
 
 def actualizar_ejemplares(productos, conjunto_ids_productos):
     '''
@@ -156,3 +159,21 @@ def eliminar_producto(productos, conjunto_ids_productos):
         print(f'Error inesperado: {error_inesperado}.')
 
     return productos, conjunto_ids_productos
+
+def guardar_productos_archivo(archivo, modo, productos):
+    '''
+    pre: recibe el archivo de texto junto con la matriz para hacer el guardado.
+    pos: guarda los productos de la matriz en un archivo de texto:
+  
+    '''
+    try:
+        arch = open(archivo, modo, encoding="UTF-8")
+        registro = [f'{fila[0]};{fila[1]};{fila[2]};{fila[3]}\n' for fila in productos]
+        arch.writelines(registro)
+        print("Datos cargados exitosamente")
+    except ValueError:
+        print("No se pudo convertir el tipo de dato de forma correcta")
+    except OSError:
+        print("No se pudo crear el archivo")
+    finally:
+        arch.close()

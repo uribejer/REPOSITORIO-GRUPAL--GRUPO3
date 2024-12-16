@@ -2,17 +2,17 @@ from crud_productos import *
 from crud_usuarios import *
 from validaciones.validaciones_usuarios import validar_id_usuarios
 from validaciones.validaciones_registros_compra import validar_id_registro_de_compra,validacion_fecha_compra
-from functools import reduce
 
 def mostrar_menu_registros_compra():
     print("=== C.R.U.D de REGISTROS DE COMPRA ===")
     print("1. Agregar/Crea un registro de compra")  
     print("2. Mostrar/Leer registros de compra")    
     print("3. Eliminar un registro de compra")   
-    print("4. Salir")
+    print("4. Total a pagar de X registro de compra y su descuento")
+    print("5. Salir")
 
 
-def agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids_usuarios):
+def agregar_registros(productos, registros, usuarios, conjunto_ids_registros, conjunto_ids_usuarios):
     '''
     pre: recibe un diccionario ya creado
     pos: agrega el registro de compra al diccionario 
@@ -35,6 +35,13 @@ def agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids
             else:
                 print("El ID ingresado no cumple con lo solicitado.")
                 return registros, conjunto_ids_registros
+            
+        if id_usuario in usuarios:
+            nombre_usuario = usuarios[id_usuario]["nombre"]
+            metodo_de_pago = usuarios[id_usuario]["metodo de pago"]
+        else:
+            print("El ID del usuario no tiene un nombre asociado.")
+            return registros, conjunto_ids_registros
 
         cant_productos_a_llevar = int(input("Cuantos productos va a llevar: "))
         if cant_productos_a_llevar <= 0:
@@ -52,18 +59,18 @@ def agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids
                 for producto in productos:
                     if (id_producto == producto[0]):
                         encontrado = True
-                        carrito.append(producto[1])
-                        precios.append(producto[2])
+
                         if producto[3] <= 0:
                             raise ValueError("No hay stock suficiente del producto.")
 
+                        carrito.append(producto[1])
+                        precios.append(producto[2])
                         producto[3] -= 1
+                        cant_productos_a_llevar -= 1
                         break
 
                 if (not(encontrado)):
                     raise LookupError("El producto no fue encontrado") 
-                else:
-                    cant_productos_a_llevar -= 1
 
             except ValueError as error_producto:
                 print(f"Error con el producto {error_producto}.")
@@ -74,19 +81,16 @@ def agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids
         if (not(validacion_fecha_compra(fecha_compra))):
             raise ValueError("La fecha ingresada no es valida. (formato dd-mm-aaaa): ")
         
-        precio_total = reduce(lambda x,y: x + y, precios)
-
         conjunto_ids_registros.add(id_registro_de_compra)
 
-        registro_de_compra_nuevo = [id_registro_de_compra, id_usuario, carrito, precio_total, fecha_compra]
+        registro_de_compra_nuevo = [id_registro_de_compra, nombre_usuario, carrito, precios, metodo_de_pago, fecha_compra]
 
         registros.append(registro_de_compra_nuevo)
 
-        print(f'El registro con ID {id_registro_de_compra}, fue agregado con exito')
+        print(f'El registro del usuario {nombre_usuario}, fue agregado con exito')
 
         return registros, conjunto_ids_registros
-
-        
+   
     except ValueError as error_id:
         print(f"Error en el ingreso de datos {error_id}.")
     except Exception as error_inesperado:
@@ -100,11 +104,18 @@ def leer_registros(registros):
     pos: muestra los registros del diccionario
 
     '''
-    print(f"{'ID (registro de compra)':^20} {'ID (cliente)':^20} {'PRODUCTOS A LLEVAR':^20} {'TOTAL A PAGAR':^20} {'FECHA COMPRA':^20}")
-    print("-" * 100)
-    for registro in registros:
-        print(f"{registro[0]:^10} {registro[1]:^20} {str(registro[2]):^10} {registro[3]:^20} {registro[4]:^20}")
 
+    for registro in registros:
+
+        print(f"ID: {registro[0]}")
+        print(f"Nombre de Usuario: {registro[1]}")
+        
+        print(f"Productos a llevar:")
+        for producto in registro[2]:
+            print(f"- {producto}")
+        
+        print(f"Metodo de pago: {registro[4]}")
+        print() 
 
 def eliminar_registro(registros, conjunto_ids_registros):
     '''
@@ -112,8 +123,8 @@ def eliminar_registro(registros, conjunto_ids_registros):
     pos: elimina el registro seleccionado y actualiza el diccionario
     '''
     try: 
-        id_registro_de_compra = int(input("Ingrese el ID del prodcuto a eliminar: "))
-        if (not validar_id_registro_de_compra(id_registro_de_compra)):
+        id_registro_de_compra = (input("Ingrese el ID del registro a eliminar: "))
+        if (not validar_id_registro_de_compra(id_registro_de_compra)) or (id_registro_de_compra not in conjunto_ids_registros):
             raise ValueError("El ID ingresado no existe o no es valido. Porfavor ingrese el id nuevamente: ")
         
         id_encontrado = False
@@ -138,3 +149,44 @@ def eliminar_registro(registros, conjunto_ids_registros):
         print(f'Error inesperado: {error_inesperado}.')
 
     return registros, conjunto_ids_registros
+
+def sumar_total_de_compra(registros, conjunto_ids_registros):
+    try:
+        id_registro_de_compra = input("Ingrese el ID del registro: ")
+
+        if id_registro_de_compra not in conjunto_ids_registros:
+            print("El ID ingresado no es valido. ")
+            return
+        
+        for registro in registros:
+            if registro[0] == id_registro_de_compra:
+                lista_precios = registro[3]
+
+                def sumar_precios(lista_precios, total=0):
+                    if not lista_precios: #caso base = lista vacia
+                        return total
+                    return sumar_precios(lista_precios[1:], total + lista_precios[0]) #caso recursivo
+
+                nombre_usuario = registro[1]
+                metodo_de_pago = registro[4]
+                total_a_pagar = sumar_precios(lista_precios)
+
+                print("Nombre del usuario: ", nombre_usuario)
+                print("Total a pagar: ", total_a_pagar)
+
+                if metodo_de_pago == "efectivo":
+                    total_a_pagar_efectivo = lambda total_a_pagar: total_a_pagar - (total_a_pagar * (10 / 100))
+
+                    print(f"Total a pagar segun el metodo de pago: {total_a_pagar_efectivo(total_a_pagar)}")
+                else:
+                    total_a_pagar_tarjeta = lambda total_a_pagar: total_a_pagar - (total_a_pagar * (20 / 100))
+
+                    print(f"Total a pagar segun el metodo de pago: {total_a_pagar_tarjeta(total_a_pagar)}")
+                return
+            
+            print("No se encontro ningun registro con el ID ingresado ")
+    except ValueError:
+        print("Error: Por favor ingrese un ID valido.")
+    except Exception as error:
+        print(f"Error inesaperado: {error}")
+

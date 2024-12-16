@@ -6,7 +6,7 @@ from crd_registros_compra import *
 def menu_general(usuarios, productos, registros, conjunto_ids_usuarios, conjunto_ids_productos, conjunto_ids_registros):
     while True:
         try:
-            opcion = int(input("1) Gestion de Usarios 2) Gestion de Productos 3) Gestion de Registros de compra 4) Salir: "))
+            opcion = int(input("1) Gestion de Usuarios 2) Gestion de Productos 3) Gestion de Registros de compra 4) Salir: "))
             if opcion == 1:
                 while True:
                     mostrar_menu_usuarios()
@@ -21,12 +21,14 @@ def menu_general(usuarios, productos, registros, conjunto_ids_usuarios, conjunto
                         if seleccion == 1:
                             crear_usuario(usuarios, conjunto_ids_usuarios)
                         elif seleccion == 2:
-                            leer_usuarios(usuarios)
+                            leer_usuarios_archivos("usuarios.json", "r")
                         elif seleccion == 3:
                             actualizar_usuarios(usuarios, conjunto_ids_usuarios)
                         elif seleccion == 4:
                             eliminar_usuarios(usuarios, conjunto_ids_usuarios)
                         elif seleccion == 5:
+                            guardar_usuarios_archivo("usuarios.json", usuarios)
+                        elif seleccion == 6:
                             print("Saliendo del sistema...")
                             break
                         else:
@@ -47,13 +49,13 @@ def menu_general(usuarios, productos, registros, conjunto_ids_usuarios, conjunto
                         if seleccion == 1:
                             agregar_producto(productos, conjunto_ids_productos)
                         elif seleccion == 2:
-                            leer_productos(productos)
+                            leer_productos_archivos("productos.txt", "r")
                         elif seleccion == 3:
                             actualizar_ejemplares(productos, conjunto_ids_productos)
                         elif seleccion == 4:
                             eliminar_producto(productos, conjunto_ids_productos)
                         elif seleccion == 5:
-                            guardar_productos_en_archivo(productos)
+                            guardar_productos_archivo("productos.txt", "w", productos)
                         elif seleccion == 6:
                             print("Saliendo del sistema...")
                             break
@@ -74,12 +76,14 @@ def menu_general(usuarios, productos, registros, conjunto_ids_usuarios, conjunto
                         seleccion = int(seleccion)
 
                         if seleccion == 1:
-                            agregar_registros(productos, registros, conjunto_ids_registros, conjunto_ids_usuarios)
+                            agregar_registros(productos, registros, usuarios, conjunto_ids_registros, conjunto_ids_usuarios)
                         elif seleccion == 2:
                             leer_registros(registros)
                         elif seleccion == 3:
                             eliminar_registro(registros, conjunto_ids_registros)
                         elif seleccion == 4:
+                            sumar_total_de_compra(registros, conjunto_ids_registros)
+                        elif seleccion == 5:
                             print("Saliendo del sistema...")
                             break
                         else:

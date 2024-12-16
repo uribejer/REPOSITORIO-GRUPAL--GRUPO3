@@ -1,4 +1,5 @@
 from validaciones.validaciones_usuarios import *
+import json
 #MENU USUARIOS
 
 def mostrar_menu_usuarios():
@@ -7,7 +8,8 @@ def mostrar_menu_usuarios():
     print("2. Mostrar/Leer usuario")    
     print("3. Actualizar un usuario") 
     print("4. Eliminar un usuario")   
-    print("5. Salir")
+    print("5. Guardar usuarios en archivo")
+    print("6. Salir")
 
 def crear_usuario(usuarios, conjunto_ids_usuarios):
     '''
@@ -61,16 +63,24 @@ def crear_usuario(usuarios, conjunto_ids_usuarios):
 
     return usuarios, conjunto_ids_usuarios
                      
-def leer_usuarios(usuarios):
+def leer_usuarios_archivos(archivo, modo):
     '''
     pre: recibe un diccionario ya creado
     pos: muestra los usuarios del diccionario
 
     '''
-    print(f"{'ID':^10} {'NOMBRE':^20} {'EMAIL':^25} {'TELEFONO':^20} {'METODO DE PAGO':^10}")
-    print("-" * 100)
-    for clave, valor in usuarios.items():
-        print(f'{clave:^10} {valor["nombre"]:^20} {valor["email"]:^25} {valor["telefono"]:^20} {valor["metodo de pago"]:^10}')
+    try:
+        with open(archivo, modo, encoding="UTF-8") as archivo_usuarios:
+            usuarios = json.load(archivo_usuarios)
+        print(f"{'ID':9} {'NOMBRE':25} {'EMAIL':25} {'TELEFONO':20} {'METODO DE PAGO':10}")
+        print("-" * 100)
+        for clave, valor in usuarios.items():
+            try:
+                print(f'{clave:9} {valor["nombre"]:25} {valor["email"]:25} {valor["telefono"]:20} {valor["metodo de pago"]:10}')
+            except KeyError as e:
+                print(f"Error: Falta el campo {e} en el registro del usuario con ID {clave}.")
+    except (FileNotFoundError, OSError) as error:
+        print(f'Error {error}')
 
 def actualizar_usuarios(usuarios, conjunto_ids_usuarios):
     '''
@@ -148,3 +158,17 @@ def eliminar_usuarios(usuarios, conjunto_ids_usuarios):
         print(f"Error inesperado {error_inesperado}.")
         
     return usuarios, conjunto_ids_usuarios
+
+def guardar_usuarios_archivo(archivo, usuarios):
+    '''
+    pre: recibe el archivo JSON junto con el diccionario para hacer el guardado.
+    pos: guarda los usuarios del diccionario en un archivo JSON:
+  
+    '''
+    try:
+        with open(archivo, "w", encoding="UTF-8") as archivo_usuarios:
+            json.dump(usuarios, archivo_usuarios)
+        print("Datos cargados exitosamente")
+    except (FileNotFoundError, OSError) as error:
+        print(f'Error {error}')
+ 
